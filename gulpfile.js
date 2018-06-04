@@ -5,6 +5,10 @@ var sass = require('gulp-sass');
 var spritesmith = require('gulp.spritesmith');
 var rimraf = require('rimraf');
 var rename = require('gulp-rename');
+const uglify = require('gulp-uglify');
+const concat = require('gulp-concat');
+const sourcemaps = require('gulp-sourcemaps');
+
 
 /*---------------Server-------------------*/
 
@@ -37,6 +41,21 @@ gulp.task('styles:compile', function() {
     .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
     .pipe(rename('main.min.css'))
     .pipe(gulp.dest('build/css'));
+});
+
+/*-----------------JS--------------------------*/
+
+gulp.task('js', function() {
+    return gulp.src([
+        'source/js/form.js',
+        'source/js/navigation.js',
+        'source/js/main.js'
+    ])
+    .pipe(sourcemaps.init())
+    .pipe(concat('main.min.js'))
+    .pipe(uglify())
+    .pipe(sourcemaps.write())
+    .pipe(gulp.dest('build/js'));
 });
 
 /*-----------------Sprite---------------------------*/
@@ -78,11 +97,12 @@ gulp.task('copy', gulp.parallel('copy:fonts', 'copy:images'));
 gulp.task('watch', function() {
     gulp.watch('source/template/**/*.pug', gulp.series('templates:compile'));
     gulp.watch('source/styles/**/*.scss', gulp.series('styles:compile'));
+    gulp.watch('source/js/**/*.js', gulp.series('js'));
 });
 
 /* -------------- Main task ------------*/
 gulp.task('default', gulp.series(
     'clean',
-    gulp.parallel('templates:compile', 'styles:compile', 'sprite', 'copy'),
+    gulp.parallel('templates:compile', 'styles:compile', 'js', 'sprite', 'copy'),
     gulp.parallel('watch', 'server')
 ));
