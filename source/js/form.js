@@ -23,5 +23,24 @@
         form.classList.add('is-hidden');
     };
 
+    me.isValid = function() {
+
+        console.log(me.isAllCompleted(document.querySelectorAll('[data-valid="required"]')));
+
+    };
+
+    me.isAllCompleted = function(data) {
+        var result = true;
+
+        for (var i = 0; i < data.length; i++) {
+            if (validation.isNotEmpty(data[i].value)) {
+                result = false;
+                break;
+            }
+        }
+
+        return result;
+    }
+
     window.form = me;
 }());
