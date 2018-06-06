@@ -15,5 +15,5 @@
         return regExp.test(email);
     };
 
-    window.validation = self;
+    window.GLOB.validation = self;
 }());

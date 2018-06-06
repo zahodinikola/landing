@@ -25,7 +25,22 @@
 
     me.isValid = function() {
 
-        console.log(me.isAllCompleted(document.querySelectorAll('[data-valid="required"]')));
+        var requiredFields = document.querySelectorAll('[data-valid="required"]');
+        var emailValue = document.querySelector('[data-email]').value;
+        var numberValue = document.querySelector('[data-number]').value;
+        
+        if (!me.isAllCompleted(requiredFields)) {
+            console.log("Please, enter the required information");
+            return false;
+        } else if (!GLOB.validation.isEmail(emailValue)) {
+            console.log("Incorrect eMail");
+            return false;
+        } else if (!GLOB.validation.isNumber(numberValue)) {
+            console.log("incorrect number");
+            return false;
+        }
+
+        return true;
 
     };
 
@@ -33,7 +48,8 @@
         var result = true;
 
         for (var i = 0; i < data.length; i++) {
-            if (validation.isNotEmpty(data[i].value)) {
+            if (!GLOB.validation.isNotEmpty(data[i].value)) {
+                //alert('here is' + data[i].value);
                 result = false;
                 break;
             }
@@ -42,5 +58,5 @@
         return result;
     }
 
-    window.form = me;
+    window.GLOB.form = me;
 }());
